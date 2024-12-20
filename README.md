@@ -1,3 +1,5 @@
+<img width="1125" alt="Screenshot 2024-12-20 at 11 28 38 AM" src="https://github.com/user-attachments/assets/1fec5f4e-c859-41ce-a39f-fd23ef2362cb" />
+
 # Descope React Native Sample App
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
