@@ -29,7 +29,7 @@ Ensure you have completed the [React Native Environment Setup](https://reactnati
 1. Clone this repository:
 
    ```bash
-   git clone https://github.com/your-repo/react-native-sample-app.git
+   git clone https://github.com/descope-sample-apps/react-native-sample-app.git
    cd react-native-sample-app
    ```
 
