@@ -1,0 +1,92 @@
+import React, { useEffect, useState } from 'react';
+import { FlowView, useSession } from '@descope/react-native-sdk';
+import { StyleSheet, View, TouchableOpacity, Text, SafeAreaView, ActivityIndicator } from 'react-native';
+import { Config } from 'react-native-config';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+
+type SimpleFlowAuthScreenProps = {
+  navigation: NativeStackNavigationProp<any>;
+};
+
+export default function SimpleFlowAuthScreen({ navigation }: SimpleFlowAuthScreenProps) {
+  const { session, manageSession } = useSession();
+  const [ isFlowReady, setIsFlowReady ] = useState(false);
+  const flowUrl = `${Config.BASE_API_URL}/login/${Config.PROJECT_ID}?flow=${Config.FLOW_ID}&shadow=false`;
+
+  useEffect(() => {
+    if(session) navigation.navigate('Home');
+  }, [session, navigation]);
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <TouchableOpacity 
+        style={styles.cancelButton}
+        onPress={() => navigation.goBack()}
+      >
+        <Text style={styles.backText}>← Cancel</Text>
+      </TouchableOpacity>
+      <FlowView
+        style={styles.fill}
+        flowOptions={{
+          url: flowUrl,
+          androidOAuthNativeProvider: 'google',
+          iosOAuthNativeProvider: 'google',
+        }}
+        onReady={() => setIsFlowReady(true)}
+        onSuccess={async (jwtResponse) => {
+          try {
+            await manageSession(jwtResponse);
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'Home' }],
+            });
+          } catch (e) {
+            console.error('Session management error:', e);
+          }
+        }}
+        onError={(error) => {
+          console.error('Authentication error:', error);
+        }}
+      />
+      {!isFlowReady && (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#007AFF" />
+        </View>
+      )}
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingHorizontal: 4,
+    paddingTop: 8,
+  },
+  fill: {
+    flex: 1,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+  cancelButton: {
+    alignSelf: 'flex-start',
+    marginBottom: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 8,
+    borderRadius: 12,
+    zIndex: 1,
+  },
+  backText: {
+    color: '#007AFF', // ios blue color
+    fontSize: 18
+  },
+  loadingContainer: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});

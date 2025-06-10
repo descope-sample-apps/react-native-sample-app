@@ -10,8 +10,15 @@
     "test": "jest"
   },
   "dependencies": {
+    "@descope/react-native-sdk": "^0.8.0",
+    "@react-navigation/native": "^7.1.10",
+    "@react-navigation/native-stack": "^7.3.14",
     "react": "19.0.0",
-    "react-native": "0.79.3"
+    "react-native": "0.79.3",
+    "react-native-animatable": "^1.4.0",
+    "react-native-config": "^1.5.5",
+    "react-native-safe-area-context": "^5.4.1",
+    "react-native-screens": "^4.11.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

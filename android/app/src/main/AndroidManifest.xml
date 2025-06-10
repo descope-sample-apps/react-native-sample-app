@@ -21,6 +21,22 @@
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
+        <!-- Required for OAuth & Magic Link -->
+        <intent-filter android:autoVerify="true">
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="https" android:host="auth.trektribe.com" android:path="/auth" />
+            <data android:scheme="https" android:host="auth.trektribe.com" android:path="/magiclink" />
+        </intent-filter>
+
+        <!-- Optional backup custom scheme (e.g., Opera) -->
+        <intent-filter>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="trektribe" android:host="auth" />
+        </intent-filter>
       </activity>
     </application>
 </manifest>
