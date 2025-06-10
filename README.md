@@ -1,97 +1,95 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+<img width="1125" alt="Descope + React Native" src="assets/screenshot.png" />
 
-# Getting Started
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+# Descope React Native Sample App with Native Flows
 
-## Step 1: Start Metro
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+Welcome to the **Descope React Native Sample App**, a demonstration of how to integrate Descope's powerful native flows into a React Native application. This project is bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli) and leverages the Descope React Native SDK to manage session authentication seamlessly.
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+## Features
+This sample app includes:
+A fully functional React Native application demonstrating multiple approaches to integrate Descope authentication:
+- **Option 1: Simple Flow:** A dedicated authentication screen navigated to from the main interface. This approach provides a clear and isolated experience for user sign-in/sign-up.
+- **Option 2: Modal Flow:** A modal overlay that presents the authentication interface. This method offers a focused, yet non-intrusive user experience by keeping the user within the same screen context.
+- **Option 3: Inline Flow:** The authentication form is embedded directly within the current screen.
 
-```sh
-# Using npm
-npm start
+Each option showcases how to use the Descope FlowView component, manage sessions, and handle user transitions post-authentication — tailored to different UX preferences and app flows.
 
-# OR using Yarn
-yarn start
-```
+## Getting Started
 
-## Step 2: Build and run your app
+### Prerequisites
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+Ensure you have completed the [React Native Environment Setup](https://reactnative.dev/docs/environment-setup) till the "Creating a new application" step. You'll also need:
 
-### Android
+- **Node.js** and **npm** or **Yarn**
+- **Android Studio** or **Xcode** (for emulators/simulators)
 
-```sh
-# Using npm
-npm run android
+### Running the App
 
-# OR using Yarn
-yarn android
-```
+1. Clone this repository:
 
-### iOS
+   ```bash
+   git clone https://github.com/descope-sample-apps/react-native-sample-app.git
+   cd react-native-sample-app
+   ```
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+2. Install dependencies:
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+   ```bash
+   npm install
+   npm install @descope/react-native-sdk
+   npm install @react-navigation/native @react-navigation/native-stack
+   npm install react-native-screens react-native-safe-area-context
+   npm install react-native-config react-native-animatable
+   # OR
+   yarn install
+   yarn add @descope/react-native-sdk
+   yarn add @react-navigation/native @react-navigation/native-stack
+   yarn add react-native-screens react-native-safe-area-context
+   yarn add react-native-config react-native-animatable
+   ```
 
-```sh
-bundle install
-```
+3. (iOS only) Install CocoaPods:
+   ```bash
+   cd ios && pod install && cd ..
+   # OR
+   yarn ios
+   ```
 
-Then, and every time you update your native dependencies, run:
+4. Build and run the app for iOS/Android:
+   #### For Android
 
-```sh
-bundle exec pod install
-```
+   ```bash
+   npm run android
+   # OR
+   yarn android
+   ```
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+   #### For iOS
 
-```sh
-# Using npm
-npm run ios
+   ```bash
+   npm run ios
+   # OR
+   yarn ios
+   ```
 
-# OR using Yarn
-yarn ios
-```
+5. Create a `.env` file in your root directory, and copy the contents from the example file `.env.example`.
+   - Change `projectId` and `baseURL` in the `.env` file to match your Descope project.
+   - Change `flowId` in the `.env` file to choose your appropriate Descope Flow.
+   - Select a flow navigation option (simple/modal/inline) by uncommenting it's `AUTH_FLOW_TYPE` field.
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+### Notes on Session Management and Flows
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+- The app uses the **`useSession` hook** for session management. Learn more in the [Descope React Native Documentation](https://docs.descope.com/build/guides/client_sdks/react-native/).
 
-## Step 3: Modify your app
+## Learn More
 
-Now that you have successfully run the app, let's make changes!
+To dive deeper, check out:
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+- [Descope Documentation](https://docs.descope.com/getting-started/react-native) – Guides, API references, and more.
+- [React Native SDK](https://github.com/descope/descope-react-native) – Official React Native documentation.
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+## License
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+This sample app is licensed under the [MIT License](https://opensource.org/licenses/MIT).
