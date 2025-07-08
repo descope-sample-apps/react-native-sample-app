@@ -26,8 +26,8 @@
             <action android:name="android.intent.action.VIEW" />
             <category android:name="android.intent.category.DEFAULT" />
             <category android:name="android.intent.category.BROWSABLE" />
-            <data android:scheme="https" android:host="auth.trektribe.com" android:path="/auth" />
-            <data android:scheme="https" android:host="auth.trektribe.com" android:path="/magiclink" />
+            <data android:scheme="https" android:host="sso.descope-devrel.com" android:pathPrefix="/auth/callback" />
+            <data android:scheme="https" android:host="sso.descope-devrel.com" android:pathPrefix="/login" />
         </intent-filter>
 
         <!-- Optional backup custom scheme (e.g., Opera) -->
@@ -35,7 +35,7 @@
             <action android:name="android.intent.action.VIEW" />
             <category android:name="android.intent.category.DEFAULT" />
             <category android:name="android.intent.category.BROWSABLE" />
-            <data android:scheme="trektribe" android:host="auth" />
+            <data android:scheme="descope" android:host="auth" />
         </intent-filter>
       </activity>
     </application>

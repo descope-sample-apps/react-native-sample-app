@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ImageBackground, SafeAreaView, TouchableOpacity, StatusBar, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground, SafeAreaView, TouchableOpacity, StatusBar, ActivityIndicator, Linking } from 'react-native';
 import { FlowView, useSession } from '@descope/react-native-sdk';
 import { Config } from 'react-native-config';
 import * as Animatable from 'react-native-animatable';
@@ -14,12 +14,30 @@ export default function WelcomeScreenInline({ navigation }: WelcomeScreenInlineP
   const [ showFlow, setShowFlow] = useState(false);        // should we show the auth inline component? (i.e, Did user click sign in?)
   const [ isFlowReady, setIsFlowReady ] = useState(false); // is the pre-loaded for the flow view ready?
   const [ isFlowShown, setIsFlowShown ] = useState(false); // is the auth inline component shown currently?
+  const [ deepLink, setDeepLink ] = useState<string | undefined>(undefined);
 
   const flowUrl = `${Config.BASE_API_URL}/login/${Config.PROJECT_ID}?flow=${Config.FLOW_ID}&shadow=true`;
 
   useEffect(() => {
-    if (session) navigation.navigate('Home');
-  }, [session, navigation]);
+    const isValidDeepLink = (url: string) => url.startsWith(`${Config.BASE_API_URL}/login`);
+  
+    const handleUrl = async (event: { url: string }) => {
+      if (isValidDeepLink(event.url)) {
+        setDeepLink(event.url);
+      } 
+    };
+  
+    Linking.addEventListener('url', handleUrl);
+  
+    // Handle deep link if app was cold-launched via a valid URL
+    Linking.getInitialURL().then((url) => {
+      if (url && isValidDeepLink(url)) {
+        setDeepLink(url);
+      }
+    });
+  
+    return () => Linking.removeAllListeners('url');
+  }, []);
 
   useEffect(() => {
     if (showFlow && isFlowReady && !isFlowShown) {
@@ -32,14 +50,19 @@ export default function WelcomeScreenInline({ navigation }: WelcomeScreenInlineP
       style={styles.fill}
       flowOptions={{
         url: flowUrl,
-        androidOAuthNativeProvider: 'google',
-        iosOAuthNativeProvider: 'google',
+        // androidOAuthNativeProvider: 'google', // did not work with native, now will launch browswer for auth
+        iosOAuthNativeProvider: 'google'
       }}
+      deepLink={deepLink}
       onSuccess={async (jwtResponse) => {
         try {
           await manageSession(jwtResponse);
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'Home' }],
+          });
         } catch (e) {
-          console.error('Session error:', e);
+          console.error('Session management error:', e);
         }
       }}
       onError={(e) => console.error('Auth error:', e)}

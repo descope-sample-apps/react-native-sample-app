@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FlowView, useSession } from '@descope/react-native-sdk';
-import { StyleSheet, View, TouchableOpacity, Text, SafeAreaView, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Text, SafeAreaView, ActivityIndicator, Linking, Alert } from 'react-native';
 import { Config } from 'react-native-config';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
@@ -11,20 +11,40 @@ type SimpleFlowAuthScreenProps = {
 export default function SimpleFlowAuthScreen({ navigation }: SimpleFlowAuthScreenProps) {
   const { session, manageSession } = useSession();
   const [ isFlowReady, setIsFlowReady ] = useState(false);
+  const [ deepLink, setDeepLink ] = useState<string | undefined>(undefined);
+
   const flowUrl = `${Config.BASE_API_URL}/login/${Config.PROJECT_ID}?flow=${Config.FLOW_ID}&shadow=false`;
 
   useEffect(() => {
-    if(session) navigation.navigate('Home');
-  }, [session, navigation]);
+    const isValidDeepLink = (url: string) => url.startsWith(`${Config.BASE_API_URL}/login`);
+  
+    const handleUrl = async (event: { url: string }) => {
+      if (isValidDeepLink(event.url)) {
+        setDeepLink(event.url);
+      } 
+    };
+  
+    Linking.addEventListener('url', handleUrl);
+  
+    // Handle deep link if app was cold-launched via a valid URL
+    Linking.getInitialURL().then((url) => {
+      if (url && isValidDeepLink(url)) {
+        setDeepLink(url);
+      }
+    });
+  
+    return () => Linking.removeAllListeners('url');
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
-      <TouchableOpacity 
+      <TouchableOpacity
         style={styles.cancelButton}
         onPress={() => navigation.goBack()}
       >
         <Text style={styles.backText}>← Cancel</Text>
       </TouchableOpacity>
+
       <FlowView
         style={styles.fill}
         flowOptions={{
@@ -32,6 +52,7 @@ export default function SimpleFlowAuthScreen({ navigation }: SimpleFlowAuthScree
           androidOAuthNativeProvider: 'google',
           iosOAuthNativeProvider: 'google',
         }}
+        deepLink={deepLink}
         onReady={() => setIsFlowReady(true)}
         onSuccess={async (jwtResponse) => {
           try {

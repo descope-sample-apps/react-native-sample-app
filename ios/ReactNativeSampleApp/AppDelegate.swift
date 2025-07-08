@@ -31,6 +31,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     return true
   }
+
+  // https://reactnavigation.org/docs/deep-linking/#setup-on-ios
+  // Required for handling Universal Links on iOS.
+  // This method is called when the app is opened via a Universal Link (e.g. Magic Link, OAuth callback),
+  // and forwards the URL to React Native's RCTLinkingManager for proper handling in JavaScript.
+  func application(_ application: UIApplication,
+                            continue userActivity: NSUserActivity,
+                            restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+    return RCTLinkingManager.application(application, continue: userActivity, restorationHandler: restorationHandler)
+  }
 }
 
 class ReactNativeDelegate: RCTDefaultReactNativeFactoryDelegate {

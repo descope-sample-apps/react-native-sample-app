@@ -1,18 +1,42 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, TouchableOpacity, Text, ActivityIndicator } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, View, TouchableOpacity, Text, ActivityIndicator, Linking } from 'react-native';
 import { FlowView, useSession } from '@descope/react-native-sdk';
 import { Config } from 'react-native-config';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 type ModalFlowAuthScreenProps = {
   setShowModal: (showModal: boolean) => void;
-  setLoggedIn: (isLoggingIn: boolean) => void;
+  navigation: NativeStackNavigationProp<any>;
 };
 
-export default function ModalFlowAuthScreen({ setShowModal, setLoggedIn }: ModalFlowAuthScreenProps) {
+export default function ModalFlowAuthScreen({ setShowModal, navigation }: ModalFlowAuthScreenProps) {
   const { manageSession } = useSession();
-  const [isFlowReady, setIsFlowReady] = useState(false);
+  const [ isFlowReady, setIsFlowReady ] = useState(false);
+  const [ deepLink, setDeepLink ] = useState<string | undefined>(undefined);
+
   const flowUrl = `${Config.BASE_API_URL}/login/${Config.PROJECT_ID}?flow=${Config.FLOW_ID}&shadow=false`;
 
+  useEffect(() => {
+    const isValidDeepLink = (url: string) => url.startsWith(`${Config.BASE_API_URL}/login`);
+  
+    const handleUrl = async (event: { url: string }) => {
+      if (isValidDeepLink(event.url)) {
+        setDeepLink(event.url);
+      } 
+    };
+  
+    Linking.addEventListener('url', handleUrl);
+  
+    // Handle deep link if app was cold-launched via a valid URL
+    Linking.getInitialURL().then((url) => {
+      if (url && isValidDeepLink(url)) {
+        setDeepLink(url);
+      }
+    });
+  
+    return () => Linking.removeAllListeners('url');
+  }, []);
+  
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.backButton} onPress={() => setShowModal(false)}>
@@ -26,16 +50,17 @@ export default function ModalFlowAuthScreen({ setShowModal, setLoggedIn }: Modal
             androidOAuthNativeProvider: 'google',
             iosOAuthNativeProvider: 'google',
           }}
+          deepLink={deepLink}
           onReady={() => setIsFlowReady(true)}
           onSuccess={async (jwtResponse) => {
             try {
               await manageSession(jwtResponse);
-              setLoggedIn(true); 
-              setTimeout(() => {
-                setShowModal(false);
-              }, 200); // graceful load into <HomeScreen />
+              navigation.reset({
+                index: 0,
+                routes: [{ name: 'Home' }],
+              });
             } catch (e) {
-              console.error('Session error:', e);
+              console.error('Session management error:', e);
             }
           }}
           onError={(e) => console.error('Auth error:', e)}

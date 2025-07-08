@@ -4,7 +4,7 @@
 <dict>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
-		<string>applinks:api.descope.com</string>
+		<string>applinks:sso.descope-devrel.com</string>
 	</array>
 </dict>
 </plist>

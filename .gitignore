@@ -76,4 +76,6 @@ yarn-error.log
 
 .vscode/
 .bundle/
+# react-native-config codegen
+ios/tmp.xcconfig
 .env

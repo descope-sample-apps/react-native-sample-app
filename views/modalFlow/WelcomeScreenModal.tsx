@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, ImageBackground, SafeAreaView, TouchableOpacity, Modal, ActivityIndicator } from 'react-native';
 import ModalFlowAuthScreen from './ModalFlowAuthScreen';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -9,13 +9,6 @@ type WelcomeScreenModalProps = {
 
 export default function WelcomeScreenModal({ navigation }: WelcomeScreenModalProps) {
   const [showModal, setShowModal] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(false);
-
-  useEffect(() => {
-    if (loggedIn) {
-      navigation.navigate('Home');
-    }
-  }, [loggedIn, navigation]);
 
   return (
     <View style={styles.container}>
@@ -47,7 +40,7 @@ export default function WelcomeScreenModal({ navigation }: WelcomeScreenModalPro
           >
             <ModalFlowAuthScreen  
               setShowModal={setShowModal}
-              setLoggedIn={setLoggedIn}
+              navigation={navigation}
             />
           </Modal>
         </SafeAreaView>
