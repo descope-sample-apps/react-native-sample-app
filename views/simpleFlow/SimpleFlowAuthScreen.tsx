@@ -53,7 +53,10 @@ export default function SimpleFlowAuthScreen({ navigation }: SimpleFlowAuthScree
           iosOAuthNativeProvider: 'google',
         }}
         deepLink={deepLink}
-        onReady={() => setIsFlowReady(true)}
+        onReady={() => {
+          setIsFlowReady(true)
+          console.log("Flow is ready");
+        }}
         onSuccess={async (jwtResponse) => {
           try {
             await manageSession(jwtResponse);
@@ -61,6 +64,7 @@ export default function SimpleFlowAuthScreen({ navigation }: SimpleFlowAuthScree
               index: 0,
               routes: [{ name: 'Home' }],
             });
+            console.log("Flow Success");
           } catch (e) {
             console.error('Session management error:', e);
           }
